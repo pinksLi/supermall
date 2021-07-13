@@ -1,0 +1,19 @@
+{
+    // 自动引入vue组件和普通的JS模块
+    // "include": [
+    //   "./src/**/*"
+    // ],
+
+    // 支持Webpack别名路径
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+          "@/*": [
+            "./src/*"
+          ]
+        },
+      },
+    //   "include": [
+    //     "./src/**/*",
+    //   ],
+  }
