@@ -1,8 +1,9 @@
 <template>
   <div class="goods">
+    <!-- key值要唯一 -->
     <goods-list-item
       v-for="item in goods"
-      :key="item.title"
+      :key="item.title + Math.random()"
       :goods-item="item"
     ></goods-list-item>
   </div>

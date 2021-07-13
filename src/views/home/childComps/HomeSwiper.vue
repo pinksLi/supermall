@@ -1,5 +1,6 @@
 <template>
   <swiper>
+    <!-- key值要唯一 -->
     <swiper-item v-for="item in banners" :key="item.title">
       <a :href="item.link">
         <img :src="item.image" alt="" />
