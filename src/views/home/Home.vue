@@ -12,7 +12,7 @@
       @pullingUp="loadMore"
     >
       <!-- 2.轮播图 -->
-      <!-- 轮播图代码太多-应该分离出去【HomeSwiper.vue】 -->
+      <!-- 轮播图代码太多-应该抽离出去【HomeSwiper.vue】 -->
       <!-- <swiper>
       <swiper-item v-for="item in banners" :key="item.title">
         <a :href="item.link">
@@ -38,6 +38,7 @@
       <!-- 计算属性传值：升级版 -->
       <goods-list :goods="showGoods" />
     </scroll>
+    <!-- 6.回到顶部 -->
     <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
 </template>
@@ -54,6 +55,8 @@ import Scroll from 'components/common/scroll/Scroll'
 import BackTop from 'components/content/backTop/BackTop'
 
 import { getHomeMultidata, getHomeGoods } from 'network/home'
+import { debounce } from 'common/utils'
+
 
 export default {
   name: 'Home',
@@ -86,7 +89,6 @@ export default {
       return this.goods[this.currentType].list
     }
   },
-
   created() {
     // 1.请求多个数据
     this.getHomeMultidata()
@@ -100,6 +102,18 @@ export default {
     this.getHomeGoods('pop')
     this.getHomeGoods('new')
     this.getHomeGoods('sell')
+
+  },
+  mounted() {
+    // 监听item中的图片加载完成
+    // const refresh = this.debounce(this.$refs.scroll.refresh, 50)
+    // debounce函数抽离出去之后
+    const refresh = debounce(this.$refs.scroll.refresh, 50)
+    this.$bus.$on('itemImageLoad', () => {
+      // console.log('----------'); // 没有防抖动函数时，会打印30次
+      // this.$refs.scroll.refresh()
+      refresh()
+    })
   },
   methods: {
     /**
@@ -123,6 +137,7 @@ export default {
         this.goods[type].page += 1
 
         // 加载多次
+        // 完成上拉加载更多
         this.$refs.scroll.finishPullUp()
       })
     },
@@ -152,10 +167,22 @@ export default {
       // console.log(position.y);
       this.isShowBackTop = (-position.y) > 1000
     },
+    // 防抖动函数(多个地方会用到)
+    // 抽离出去【utils.js】
+    // debounce(func, delay) {
+    //   let timer = null
+    //   return function (...args) {
+    //     if (timer) clearTimeout(timer)
+    //     timer = setTimeout(() => {
+    //       func.apply(this, args)
+    //     }, delay)
+    //   }
+    // },
     loadMore() {
       // console.log('上拉加载更多');
+      // currentType为当前选中的类型
       this.getHomeGoods(this.currentType)
-    }
+    },
   }
 }
 </script>

@@ -7,14 +7,6 @@
 <script>
 export default {
   name: 'Slide',
-  components: {
-
-  },
-  data() {
-    return {
-
-    }
-  },
 }
 </script>
 
