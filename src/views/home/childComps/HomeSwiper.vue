@@ -3,7 +3,7 @@
     <!-- key值要唯一 -->
     <swiper-item v-for="item in banners" :key="item.title">
       <a :href="item.link">
-        <img :src="item.image" alt="" />
+        <img :src="item.image" alt="" @load="imageLoad" />
       </a>
     </swiper-item>
   </swiper>
@@ -27,9 +27,27 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      isLoad: false
+    }
+  },
   components: {
     Swiper,
     SwiperItem
+  },
+  methods: {
+    imageLoad() {
+      // // console.log('---------'); // 打印4次(轮播图4张)
+      // // 子传父 -> 【Home.vue】
+      // this.$emit('swiperImageLoad')
+      // 升级版：利用变量记录发送状态
+      if (!this.isLoad) {
+        // console.log('---------'); // 打印1次(轮播图4张)
+        this.$emit('swiperImageLoad')
+        this.isLoad = true
+      }
+    }
   }
 }
 </script>

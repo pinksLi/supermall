@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="itemClick">
     <!-- 监听所有图片加载完成，用@load事件 -->
     <img :src="goodsItem.show.img" alt="" @load="imageLoad" />
     <div class="goods-info">
@@ -25,6 +25,11 @@ export default {
     imageLoad() {
       // console.log('imageLoad');
       this.$bus.$emit('itemImageLoad')
+    },
+    itemClick() {
+      // console.log('跳转到详情页');
+      // console.log(this.goodsItem); // 有个iid 商品id
+      this.$router.push('/detail/' + this.goodsItem.iid)
     }
   }
 }

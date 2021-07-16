@@ -1,7 +1,15 @@
 <template>
-  <div id="home">
+  <div id="home" class="wrapper">
     <!-- 1.导航条 -->
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
+
+    <tab-control
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
+      ref="tabControl2"
+      class="tab-control"
+      v-show="isTabFixed"
+    />
 
     <scroll
       class="content"
@@ -20,17 +28,22 @@
         </a>
       </swiper-item>
     </swiper> -->
-      <home-swiper :banners="banners" />
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" />
       <!-- 3.推荐模块 -->
       <recommend-view :recommends="recommends" />
       <!-- 4.本周流行模块 -->
       <feature-view />
       <!-- 5.选项卡模块 -->
+      <!-- class暂时不用了 -->
+      <!-- class="tab-control" -->
       <tab-control
-        class="tab-control"
         :titles="['流行', '新款', '精选']"
         @tabClick="tabClick"
+        ref="tabControl"
       />
+      <!-- tab-control 动态设定class无效 -->
+      <!-- :class="{ fixed: isTabFixed }" -->
+
       <!-- 固定类型传值：固定值-->
       <!-- <goods-list :goods="goods['pop'].list" /> -->
       <!-- 变量传值：灵活（但属性值太长） -->
@@ -81,13 +94,28 @@ export default {
       },
       // 默认选中类型
       currentType: 'pop',
-      isShowBackTop: false
+      isShowBackTop: false,
+      tabOffsetTop: 0,
+      isTabFixed: false,
+      saveY: 0
     }
   },
   computed: {
     showGoods() {
       return this.goods[this.currentType].list
     }
+  },
+  destroyed() {
+    console.log('home destroyed');
+  },
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 0)
+    this.$refs.scroll.refresh()
+  },
+  deactivated() {
+    // console.log(this.saveY);
+    // console.log(this.$refs.scroll);
+    this.saveY = this.$refs.scroll.getScrollY()
   },
   created() {
     // 1.请求多个数据
@@ -105,7 +133,7 @@ export default {
 
   },
   mounted() {
-    // 监听item中的图片加载完成
+    // 1.监听item中的图片加载完成
     // const refresh = this.debounce(this.$refs.scroll.refresh, 50)
     // debounce函数抽离出去之后
     const refresh = debounce(this.$refs.scroll.refresh, 50)
@@ -114,6 +142,16 @@ export default {
       // this.$refs.scroll.refresh()
       refresh()
     })
+
+    // 2.获取tabControl的offsetTop
+    // console.log(this.$refs.tabControl.offsetTop); // undefined
+    // console.log(this.$refs.tabControl); // VueComponent {}
+    // 所有的组件都有一个属性$el,用于获取组件中的元素
+    // console.log(this.$refs.tabControl.$el); // <div></div>
+    // 图片不一定全部挂载完成--所以要监听图片加载完成
+    // 主要是轮播图，加载比较慢
+    // console.log(this.$refs.tabControl.$el.offsetTop); // 59 -> 345 -> 550
+    // this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
   },
   methods: {
     /**
@@ -158,14 +196,20 @@ export default {
           // 如果最后有 default，这里必须要写break，否则会产生 case 穿透
           break
       }
+      this.$refs.tabControl.currentIndex = index
+      this.$refs.tabControl2.currentIndex = index
     },
     backClick() {
       // console.log('我被点击了');
       this.$refs.scroll.scrollTo(0, 0)
     },
     contentScroll(position) {
+      // 1.判断BackTop是否显示
       // console.log(position.y);
       this.isShowBackTop = (-position.y) > 1000
+
+      // 2.决定TabControl是否吸顶(position: fixed)
+      this.isTabFixed = (-position.y) > this.tabOffsetTop
     },
     // 防抖动函数(多个地方会用到)
     // 抽离出去【utils.js】
@@ -183,6 +227,13 @@ export default {
       // currentType为当前选中的类型
       this.getHomeGoods(this.currentType)
     },
+    swiperImageLoad() {
+      // 获取tabControl的offsetTop
+      // console.log(this.$refs.tabControl.$el.offsetTop); // 666 打印4次(轮播图4张) 发送时只发送一次即可
+      // 升级版：此代码无影响
+      // console.log(this.$refs.tabControl.$el.offsetTop); // 666 打印1次(轮播图4张)
+      this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
+    }
   }
 }
 </script>
@@ -198,24 +249,28 @@ export default {
   position: relative;
 }
 .home-nav {
+  /* 在使用浏览器原生滚动时，为了让导航条不跟随一起滚动 */
+  /* 但在使用better-scroll进行局部滚动后就能达到这个效果，样式失效 */
   /* 固定定位 */
-  position: fixed;
+  /* position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 9;
+  z-index: 9; */
 
   background-color: var(--color-tint);
   color: #fff;
 }
-.tab-control {
-  /* 滚动固定 */
-  /* sticky属性：距离顶端44px时，变为 fix 定位 */
-  /* sticky属性和overflow: hidden冲突 */
+/* 滚动固定 */
+/* sticky属性：距离顶端44px时，变为 fix 定位 */
+/* sticky属性和overflow: hidden冲突 */
+/* sticky属性浏览器兼容性不强，开发时不推荐使用 */
+/* .tab-control {
   position: sticky;
   top: 44px;
   z-index: 9;
-}
+} */
+
 /* 滚动条 */
 /* 方法1：数值计算，导航条不需要滚动（44px） */
 /* .content {
@@ -230,5 +285,16 @@ export default {
   bottom: 49px;
   left: 0;
   right: 0;
+}
+/* tab-control 动态设定class无效 */
+/* .fixed {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  right: 0;
+} */
+.tab-control {
+  position: relative;
+  z-index: 9;
 }
 </style>
