@@ -75,6 +75,7 @@ export default {
   border-bottom: 5px solid #f2f5f8;
 }
 .info-title {
+  font-size: 16px;
   color: #222;
 }
 .info-price {

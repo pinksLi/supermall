@@ -1,5 +1,6 @@
 <template>
   <swiper class="detail-swiper">
+    <!-- 轮播图 -->
     <swiper-item v-for="item in topImages" :key="item">
       <img :src="item" alt="" />
     </swiper-item>

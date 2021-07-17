@@ -1,9 +1,11 @@
 <template>
   <div id="detail">
     <nav-bar>
+      <!-- 1.返回按钮 -->
       <div slot="left" class="back" @click="backClick">
         <img src="~assets/img/common/back.svg" alt="" />
       </div>
+      <!-- 2.tab标签 -->
       <div slot="center" class="title">
         <div
           v-for="(item, index) in titles"
