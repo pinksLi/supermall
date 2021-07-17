@@ -10,19 +10,6 @@
       <detail-param-info :param-info="paramInfo" />
       <detail-comment-info :comment-info="commentInfo" />
       <goods-list :goods="recommends" />
-
-      <!-- <ul>
-        <li>nihao</li>
-        <li>nihao</li>
-        <li>nihao</li>
-        <li>nihao</li>
-        <li>nihao</li>
-        <li>nihao</li>
-        <li>nihao</li>
-        <li>nihao</li>
-        <li>nihao</li>
-        <li>nihao</li>
-      </ul> -->
     </scroll>
   </div>
 </template>
