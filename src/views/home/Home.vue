@@ -68,7 +68,9 @@ import Scroll from 'components/common/scroll/Scroll'
 import BackTop from 'components/content/backTop/BackTop'
 
 import { getHomeMultidata, getHomeGoods } from 'network/home'
-import { debounce } from 'common/utils'
+// 已被提取到混入函数中【mixin.js】
+// import { debounce } from 'common/utils'
+import { itemListenerMixin } from 'common/mixin'
 
 
 export default {
@@ -83,6 +85,7 @@ export default {
     Scroll,
     BackTop
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       banners: [],
@@ -97,7 +100,7 @@ export default {
       isShowBackTop: false,
       tabOffsetTop: 0,
       isTabFixed: false,
-      saveY: 0
+      saveY: 0,
     }
   },
   computed: {
@@ -106,16 +109,20 @@ export default {
     }
   },
   destroyed() {
-    console.log('home destroyed');
+    // console.log('home destroyed');
   },
   activated() {
     this.$refs.scroll.scrollTo(0, this.saveY, 0)
     this.$refs.scroll.refresh()
   },
   deactivated() {
+    // 1.保存Y值
     // console.log(this.saveY);
     // console.log(this.$refs.scroll);
     this.saveY = this.$refs.scroll.getScrollY()
+
+    // 2.取消全局事件的监听
+    this.$bus.$off('itemImgLoad', this.itemImgListener)
   },
   created() {
     // 1.请求多个数据
@@ -131,27 +138,33 @@ export default {
     this.getHomeGoods('new')
     this.getHomeGoods('sell')
 
+    // 3.手动代码点击一次
+    // this.tabClick(0)
   },
+  // 已被提取到混入函数中【mixin.js】
   mounted() {
-    // 1.监听item中的图片加载完成
-    // const refresh = this.debounce(this.$refs.scroll.refresh, 50)
-    // debounce函数抽离出去之后
-    const refresh = debounce(this.$refs.scroll.refresh, 50)
-    this.$bus.$on('itemImageLoad', () => {
-      // console.log('----------'); // 没有防抖动函数时，会打印30次
-      // this.$refs.scroll.refresh()
-      refresh()
-    })
+    // // 1.监听item中的图片加载完成
+    // // const refresh = this.debounce(this.$refs.scroll.refresh, 50)
+    // // debounce函数抽离出去之后
+    // const refresh = debounce(this.$refs.scroll.refresh, 50)
 
-    // 2.获取tabControl的offsetTop
-    // console.log(this.$refs.tabControl.offsetTop); // undefined
-    // console.log(this.$refs.tabControl); // VueComponent {}
-    // 所有的组件都有一个属性$el,用于获取组件中的元素
-    // console.log(this.$refs.tabControl.$el); // <div></div>
-    // 图片不一定全部挂载完成--所以要监听图片加载完成
-    // 主要是轮播图，加载比较慢
-    // console.log(this.$refs.tabControl.$el.offsetTop); // 59 -> 345 -> 550
-    // this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
+    // // 对监听的事件进行保存
+    // this.itemImgListener = () => {
+    //   // console.log('----------'); // 没有防抖动函数时，会打印30次
+    //   // this.$refs.scroll.refresh()
+    //   refresh()
+    // }
+    // this.$bus.$on('itemImgLoad', this.itemImgListener)
+
+    // // 2.获取tabControl的offsetTop
+    // // console.log(this.$refs.tabControl.offsetTop); // undefined
+    // // console.log(this.$refs.tabControl); // VueComponent {}
+    // // 所有的组件都有一个属性$el,用于获取组件中的元素
+    // // console.log(this.$refs.tabControl.$el); // <div></div>
+    // // 图片不一定全部挂载完成--所以要监听图片加载完成
+    // // 主要是轮播图，加载比较慢
+    // // console.log(this.$refs.tabControl.$el.offsetTop); // 59 -> 345 -> 550
+    // // this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
   },
   methods: {
     /**

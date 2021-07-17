@@ -9,6 +9,12 @@ export function getDetail(iid) {
     })
 }
 
+export function getRecommend() {
+    return request({
+        url: '/recommend'
+    })
+}
+
 // 数据较多,先整合
 // 抽离组件需要的商品信息
 export class Goods {
