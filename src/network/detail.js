@@ -65,6 +65,8 @@ export class GoodsParam {
         this.infos = info.set
         // 图片
         // 注: images可能没有值(某些商品有值, 某些没有值)
-        this.image = info.images ? info.images[0] : ''
+        // this.images = info.images ? info.images[0] : ''
+        // 接口中images是个Array，有多个值
+        this.images = info.images ? info.images : ''
     }
 }

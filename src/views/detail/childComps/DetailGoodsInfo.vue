@@ -99,8 +99,7 @@ export default {
   padding: 15px 0;
 }
 .info-key {
-  /* margin: 10px 0 10px; */
-  margin: 10px 0;
+  margin: 10px 5px;
   font-size: 15px;
   color: #333;
 }

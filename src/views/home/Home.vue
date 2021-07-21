@@ -3,10 +3,11 @@
     <!-- 1.导航条 -->
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
 
+    <!-- 技巧：掩耳盗铃 -->
     <tab-control
       :titles="['流行', '新款', '精选']"
       @tabClick="tabClick"
-      ref="tabControl2"
+      ref="topTabControl"
       class="tab-control"
       v-show="isTabFixed"
     />
@@ -52,7 +53,7 @@
       <goods-list :goods="showGoods" />
     </scroll>
     <!-- 6.回到顶部 -->
-    <back-top @click.native="backClick" v-show="isShowBackTop" />
+    <back-top @click.native="backTop" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -65,12 +66,16 @@ import NavBar from 'components/common/navbar/NavBar'
 import TabControl from 'components/content/tabControl/TabControl'
 import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from 'components/common/scroll/Scroll'
-import BackTop from 'components/content/backTop/BackTop'
+// 已被提取到混入函数中【mixin.js】
+// import BackTop from 'components/content/backTop/BackTop'
 
 import { getHomeMultidata, getHomeGoods } from 'network/home'
 // 已被提取到混入函数中【mixin.js】
 // import { debounce } from 'common/utils'
-import { itemListenerMixin } from 'common/mixin'
+// 已被提取到混入函数中【mixin.js】
+// import { BACK_POSITION } from "common/const";
+import { POP, NEW, SELL } from "common/const";
+import { itemListenerMixin, tabControlMixin, backTopMixin } from 'common/mixin'
 
 
 export default {
@@ -83,9 +88,10 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop
+    // 已被提取到混入函数中【mixin.js】
+    // BackTop
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, tabControlMixin, backTopMixin],
   data() {
     return {
       banners: [],
@@ -94,10 +100,20 @@ export default {
         'pop': { page: 0, list: [] },
         'new': { page: 0, list: [] },
         'sell': { page: 0, list: [] },
+        // 常量替换(这个怎么有问题呢?)
+        // POP: { page: 0, list: [] },
+        // NEW: { page: 0, list: [] },
+        // SELL: { page: 0, list: [] },
       },
-      // 默认选中类型
-      currentType: 'pop',
-      isShowBackTop: false,
+
+      // 已被提取到混入函数中【mixin.js】
+      //   // 默认选中类型
+      //   currentType: 'pop',
+      //   // 常量替换
+      //   currentType: POP,
+
+      // 已被提取到混入函数中【mixin.js】
+      // isShowBackTop: false,
       tabOffsetTop: 0,
       isTabFixed: false,
       saveY: 0,
@@ -134,11 +150,16 @@ export default {
     //   console.log(res);
     // })
     // 调用methods中的方法（推荐使用）
-    this.getHomeGoods('pop')
-    this.getHomeGoods('new')
-    this.getHomeGoods('sell')
+    // this.getHomeGoods('pop')
+    // this.getHomeGoods('new')
+    // this.getHomeGoods('sell')
+    // 常量替换
+    this.getHomeGoods(POP)
+    this.getHomeGoods(NEW)
+    this.getHomeGoods(SELL)
 
     // 3.手动代码点击一次
+    // 解决currentIndex不存在(第一种方案)
     // this.tabClick(0)
   },
   // 已被提取到混入函数中【mixin.js】
@@ -165,6 +186,10 @@ export default {
     // // 主要是轮播图，加载比较慢
     // // console.log(this.$refs.tabControl.$el.offsetTop); // 59 -> 345 -> 550
     // // this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
+
+    // 3.手动代码点击一次
+    // 解决currentIndex不存在(第二种方案)
+    this.tabClick(0)
   },
   methods: {
     /**
@@ -195,35 +220,55 @@ export default {
     /**
      * 事件监听相关的方法
      */
-    tabClick(index) {
-      // console.log(index);
-      switch (index) {
-        case 0:
-          this.currentType = 'pop'
-          break
-        case 1:
-          this.currentType = 'new'
-          break
-        case 2:
-          this.currentType = 'sell'
-          // 如果最后有 default，这里必须要写break，否则会产生 case 穿透
-          break
-      }
-      this.$refs.tabControl.currentIndex = index
-      this.$refs.tabControl2.currentIndex = index
-    },
-    backClick() {
-      // console.log('我被点击了');
-      this.$refs.scroll.scrollTo(0, 0)
-    },
+    // 已被提取到混入函数中【mixin.js】
+    // tabClick(index) {
+    //   // console.log(index);
+    //   switch (index) {
+    //     case 0:
+    //       // this.currentType = 'pop'
+    //       // 常量替代
+    //       this.currentType = POP
+    //       break
+    //     case 1:
+    //       // this.currentType = 'new'
+    //       this.currentType = NEW
+    //       break
+    //     case 2:
+    //       // this.currentType = 'sell'
+    //       this.currentType = SELL
+    //       // 如果最后有 default，这里必须要写break，否则会产生 case 穿透
+    //       break
+    //   }
+    //   // 让两个TabControl的currentIndex保持一致
+    //   // 解决currentIndex不存在(第一种方案)
+    //   // if (this.$refs.topTabControl !== undefined) {
+    //   //   this.$refs.topTabControl.currentIndex = index
+    //   //   this.$refs.tabControl.currentIndex = index
+    //   // }
+    //   // 让两个TabControl的currentIndex保持一致
+    //   // 解决currentIndex不存在(第二种方案)
+    //   this.$refs.topTabControl.currentIndex = index
+    //   this.$refs.tabControl.currentIndex = index
+    // },
+    // 已被提取到混入函数中【mixin.js】
+    // backTop() {
+    //   this.$refs.scroll.scrollTo(0, 0, 300)
+    // },
     contentScroll(position) {
       // 1.判断BackTop是否显示
       // console.log(position.y);
-      this.isShowBackTop = (-position.y) > 1000
+      this.listenShowBackTop(position)
 
       // 2.决定TabControl是否吸顶(position: fixed)
       this.isTabFixed = (-position.y) > this.tabOffsetTop
     },
+    // 已被提取到混入函数中【mixin.js】
+    // listenShowBackTop(position) {
+    //   // this.isShowBackTop = (-position.y) > 1000
+    //   // 常量替换
+    //   this.isShowBackTop = (-position.y) > BACK_POSITION
+    // }
+
     // 防抖动函数(多个地方会用到)
     // 抽离出去【utils.js】
     // debounce(func, delay) {
@@ -256,7 +301,6 @@ export default {
 #home {
   /* 防止塌陷，以后要删除(二选一)，这里最后不用了 */
   /* margin-top: 44px; */
-  /* padding-top: 44px; */
   height: 100vh;
   /* 子绝父相 */
   position: relative;

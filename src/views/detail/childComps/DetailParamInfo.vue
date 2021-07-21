@@ -18,8 +18,10 @@
       </tr>
     </table>
     <!-- 3.图片 -->
-    <div class="info-img" v-if="paramInfo.image.length !== 0">
-      <img :src="paramInfo.image" alt="" />
+    <div class="info-img" v-if="paramInfo.images.length !== 0">
+      <div v-for="(item, index5) in paramInfo.images" :key="index5">
+        <img :src="item" alt="" />
+      </div>
     </div>
   </div>
 </template>
@@ -66,6 +68,7 @@ export default {
 .param-value {
   color: #eb4868;
 }
+
 .info-img img {
   width: 100%;
 }
