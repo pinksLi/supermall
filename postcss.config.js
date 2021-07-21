@@ -12,7 +12,7 @@ module.exports = {
             // 指定需要转换成的视窗单位，默认vw
             viewportUnit: 'vw',
             // 指定不转换为视窗单位的类名(转换黑名单)
-            // selectorBlackList: ['ignore', 'tab-bar', 'tab-bar-item'],
+            selectorBlackList: ['ignore', 'tab-bar'],
             // 默认值1，小于或者等于1px则不进行转换
             minPixelValue: 1,
             // 是否在媒体查询的css代码中也进行转换，默认false
