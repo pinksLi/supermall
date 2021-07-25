@@ -49,14 +49,14 @@ export const tabControlMixin = {
             }
             // 让两个TabControl的currentIndex保持一致
             // 解决currentIndex不存在(第一种方案)
-            // if (this.$refs.topTabControl !== undefined) {
-            //   this.$refs.topTabControl.currentIndex = index
-            //   this.$refs.tabControl.currentIndex = index
-            // }
+            if (this.$refs.topTabControl !== undefined) {
+                this.$refs.topTabControl.currentIndex = index
+                this.$refs.tabControl.currentIndex = index
+            }
             // 让两个TabControl的currentIndex保持一致
             // 解决currentIndex不存在(第二种方案)
-            this.$refs.topTabControl.currentIndex = index
-            this.$refs.tabControl.currentIndex = index
+            // this.$refs.topTabControl.currentIndex = index
+            // this.$refs.tabControl.currentIndex = index
         },
     }
 }

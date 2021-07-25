@@ -31,7 +31,9 @@ export default {
     this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,
       probeType: this.probeType,
-      pullUpLoad: this.pullUpLoad
+      pullUpLoad: this.pullUpLoad,
+      observeImage: true,
+      observeDOM: true
     })
 
     // 2.监听滚动的位置

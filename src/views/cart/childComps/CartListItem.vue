@@ -22,7 +22,12 @@
         <!-- 商品价格 -->
         <div class="item-price left">￥{{ product.price }}</div>
         <!-- 商品数量 -->
-        <div class="item-count right">x{{ product.count }}</div>
+        <div class="item-count right">
+          <div class="sub" @click="subClick">-</div>
+          <!-- <div type="input" class="count">{{ product.count }}</div> -->
+          <input type="text" class="count" v-model="product.count" />
+          <div class="add" @click="addClick">+</div>
+        </div>
       </div>
     </div>
   </div>
@@ -47,6 +52,19 @@ export default {
   methods: {
     checkedChange() {
       this.product.checked = !this.product.checked
+    },
+    // 购物车数量增减
+    addClick() {
+      this.product.count++
+    },
+    subClick() {
+      if (this.product.count > 1) {
+        this.product.count--
+      } else {
+        this.product.count = 1
+        // alert('受不了啦，宝贝不能再减少啦')
+        this.$toast.show('宝贝不能再减少啦')
+      }
     }
   },
   computed: {
@@ -107,11 +125,31 @@ export default {
 .info-bottom {
   margin-top: 10px;
   position: absolute;
-  bottom: 10px;
   left: 10px;
   right: 10px;
 }
-.item-price {
+.info-bottom .item-price {
   color: orangered;
+}
+.info-bottom .item-count {
+  margin-right: 6px;
+}
+.sub,
+.add,
+.count {
+  display: inline-block;
+  width: 20px;
+  height: 22px;
+  line-height: 20px;
+  margin: 3px;
+  /* 合并相邻边框 */
+  /* margin-left: -1px; */
+  text-align: center;
+  border: 1px solid #333;
+  background-color: #efefef;
+}
+.count {
+  width: 40px;
+  background-color: #fff;
 }
 </style>

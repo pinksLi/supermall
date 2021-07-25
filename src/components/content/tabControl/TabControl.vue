@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     itemClick(index) {
+      // console.log('点击了' + index);
       this.currentIndex = index
       // 自定义组件把数据传出去（内部-->外部）
       this.$emit('tabClick', index)

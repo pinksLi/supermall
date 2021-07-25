@@ -4,6 +4,8 @@
       <router-view />
     </keep-alive>
     <main-tab-bar />
+    <icon></icon>
+    <svg-icon></svg-icon>
   </div>
 </template>
 
@@ -12,10 +14,16 @@
 import MainTabBar from 'components/content/mainTabbar/MainTabBar.vue'
 // 路径常规写法
 // import MainTabBar from './components/content/mainTabbar/MainTabBar.vue'
+
+import Icon from 'components/content/Icon/Icon'
+import SvgIcon from 'components/content/Icon/svg'
+
 export default {
   name: 'app',
   components: {
-    MainTabBar
+    MainTabBar,
+    Icon,
+    SvgIcon
   }
 }
 </script>

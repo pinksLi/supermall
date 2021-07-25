@@ -248,17 +248,17 @@ export default {
       // positionY 在 [4347-无穷大) 时，index = 3
 
       let length = this.themeTopYs.length
-      // 方法1：普通做法
-      for (let i = 0; i < length; i++) {
-        // 经过每个主题时只打印一次
-        // if ((this.currentIndex !== i) &&
-        //   ((i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1])
-        //     || (i === length - 1 && positionY >= this.themeTopYs[i]))) {
-        //   this.currentIndex = i
-        //   // console.log(this.currentIndex); 
-        //   this.$refs.nav.currentIndex = this.currentIndex
-        // }
-      }
+      //   // 方法1：普通做法
+      //   for (let i = 0; i < length; i++) {
+      //     // 经过每个主题时只打印一次
+      //     if ((this.currentIndex !== i) &&
+      //       ((i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1])
+      //         || (i === length - 1 && positionY >= this.themeTopYs[i]))) {
+      //       this.currentIndex = i
+      //       // console.log(this.currentIndex); 
+      //       this.$refs.nav.currentIndex = this.currentIndex
+      //     }
+      //   }
       // 方法2：hack做法
       // 注意：最后一个数据【Number.MAX_VALUE】是自己加的，不用遍历，故length-1
       for (let i = 0; i < length - 1; i++) {

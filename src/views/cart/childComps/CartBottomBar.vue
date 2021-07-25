@@ -93,7 +93,7 @@ export default {
       if (this.checkLength === 0) {
         this.$toast.show('请选择要购买的商品', 2000)
       } else {
-        this.$toast.show('您选择了' + this.checkLength + '几件商品')
+        this.$toast.show('您选择了' + this.checkLength + '件商品')
       }
     }
     // this.$toast.show('请您选择支付方式：微信  支付宝  银行卡')
@@ -127,7 +127,6 @@ export default {
       //     }
       //   }
       //   return true
-
     }
   }
 }

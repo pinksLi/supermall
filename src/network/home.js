@@ -8,7 +8,7 @@ export function getHomeMultidata() {
 }
 export function getHomeGoods(type, page) {
     return request({
-        // 此接口已更新，需替换为最新的
+        // 此接口已更新，已经替换为最新的
         url: '/home/data',
         params: {
             type,
